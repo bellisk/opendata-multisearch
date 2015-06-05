@@ -6,6 +6,17 @@
 </head>
 <body>
     <h1>ORD Hackday 2015 - Open Data Multisearch</h1>
-
+    
+    <form action="/" method="get" class="search">
+        <input type="text" name="query" value="{{query}}" class="query"> <input type="submit" value="Search" class="submit">
+    </form>
+    
+    <ul class="results">
+    {% for r  in results %}
+        <li class="result">
+            <a href="{{r.url}}" class="link">{{r.name}}</a>
+        </li>
+    {% endfor %}
+    </ul>
 </body>
 </html>
