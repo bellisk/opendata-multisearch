@@ -22,6 +22,7 @@ def search(request):
 
                 if json_result['success']:
                     for r in json_result['result']['results']:
+                        r['result_url'] = portal.url + '/dataset/' + r['name']
                         c['results'].append(r)
 
     return render(request, 'search.html', c)
