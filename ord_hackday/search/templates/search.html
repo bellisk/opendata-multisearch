@@ -15,13 +15,14 @@
     </form>
     
     <ul class="portals">
-        Searching {% for p in portals %}<li>{{p.name}}</li>{% endfor %}
+        Searching {% for p in portals %}<li><a href="{{p.url}}">{{p.name}}</a></li>{% endfor %}
     </ul>
     
     <ul class="results">
     {% for r  in results %}
         <li class="result">
-            <a href="{{r.url}}" class="link">{{r.name}}</a>
+            <a href="{{r.url}}" class="link">{{r.title}}</a>
+            <div class="notes">{{r.notes}}</div>
         </li>
     {% endfor %}
     </ul>
