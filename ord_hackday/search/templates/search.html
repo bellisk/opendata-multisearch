@@ -21,10 +21,14 @@
     <ul class="results">
     {% for r  in results %}
         <li class="result">
-            <a href="{{r.url}}" class="link">{{r.title}}</a>
+            <a href="{{r.result_url}}" class="link">{{r.title}}</a>
             <div class="notes">{{r.notes}}</div>
         </li>
     {% endfor %}
     </ul>
+    
+    <div class="footer">
+        <a href="http://make.opendata.ch/wiki/project:discoverabilitythroughstructure">Project Page</a>
+    </div>
 </body>
 </html>

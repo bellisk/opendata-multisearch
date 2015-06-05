@@ -10,6 +10,9 @@ body {
 .portals {
     padding: 0;
     list-style: none;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #aaaaaa;
+    margin-bottom: 1em;
 }
 
 .portals li {
@@ -30,6 +33,7 @@ body {
 }
 
 .results li {
+    padding-bottom: 0.5em;
     border-bottom: 1px solid #aaaaaa;
     margin-bottom: 1em;
 }
