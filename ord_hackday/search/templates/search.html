@@ -1,0 +1,34 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Open Data Multisearch</title>
+    <link href="{% static "search/style.css" %}" rel="stylesheet" type="text/css" media="screen">
+</head>
+<body>
+    <h1>ORD Hackday 2015 - Open Data Multisearch</h1>
+    
+    <form action="/" method="get" class="search">
+        <input type="text" name="query" value="{{query}}" class="query"> <input type="submit" value="Search" class="submit">
+    </form>
+    
+    <ul class="portals">
+        Searching {% for p in portals %}<li><a href="{{p.url}}">{{p.name}}</a></li>{% endfor %}
+    </ul>
+    
+    <ul class="results">
+    {% for r  in results %}
+        <li class="result">
+            <a href="{{r.result_url}}" class="link">{{r.title}}</a>
+            <div class="notes">{{r.notes}}</div>
+        </li>
+    {% endfor %}
+    </ul>
+    
+    <div class="footer">
+        <a href="http://make.opendata.ch/wiki/project:discoverabilitythroughstructure">Project Page</a>
+    </div>
+</body>
+</html>
