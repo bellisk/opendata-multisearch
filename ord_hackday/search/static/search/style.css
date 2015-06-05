@@ -1,0 +1,35 @@
+body {
+    margin-left: 2em;
+    margin-right: 2em;
+}
+
+.search input {
+    font-size: 150%;
+}
+
+.portals {
+    padding: 0;
+    list-style: none;
+}
+
+.portals li {
+    display: inline;
+}
+
+.portals li:after {
+    content: ", ";
+}
+
+.portals li:last-child:after {
+    content: "";
+}
+
+.results {
+    padding: 0;
+    list-style: none;
+}
+
+.results li {
+    border-bottom: 1px solid #aaaaaa;
+    margin-bottom: 1em;
+}

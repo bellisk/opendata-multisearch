@@ -1,8 +1,11 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
     <title>Open Data Multisearch</title>
+    <link href="{% static "search/style.css" %}" rel="stylesheet" type="text/css" media="screen">
 </head>
 <body>
     <h1>ORD Hackday 2015 - Open Data Multisearch</h1>
@@ -10,6 +13,10 @@
     <form action="/" method="get" class="search">
         <input type="text" name="query" value="{{query}}" class="query"> <input type="submit" value="Search" class="submit">
     </form>
+    
+    <ul class="portals">
+        Searching {% for p in portals %}<li>{{p.name}}</li>{% endfor %}
+    </ul>
     
     <ul class="results">
     {% for r  in results %}
