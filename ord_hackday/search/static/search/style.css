@@ -3,6 +3,10 @@ body {
     margin-right: 2em;
 }
 
+h1 a {
+    text-decoration: none;
+}
+
 .query, .submit {
     font-size: 150%;
 }

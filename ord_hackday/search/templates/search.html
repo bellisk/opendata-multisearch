@@ -8,15 +8,15 @@
     <link href="{% static "search/style.css" %}" rel="stylesheet" type="text/css" media="screen">
 </head>
 <body>
-    <h1>ORD Hackday 2015 - Open Data Multisearch</h1>
+    <h1><a href="/">ORD Hackday 2015 - Open Data Multisearch</a></h1>
     
     <form action="/" method="get" class="search">
         <input type="text" name="query" value="{{query}}" class="query"> <input type="submit" value="Search" class="submit">
         <div class="daterange">
-            Published: <input type="date" name="pubfrom" value="{{pubfrom}}"> - <input type="date" name="pubto" value="{{pubto}}">
+            Published: <input type="date" name="pubfrom" value="{{pubfrom}}" placeholder="yyyy-mm-dd"> - <input type="date" name="pubto" value="{{pubto}}" placeholder="yyyy-mm-dd">
         </div>
         <div class="daterange">
-            Relevant timespan: <input type="date" name="datefrom" value="{{datefrom}}"> - <input type="date" name="dateto" value="{{dateto}}">
+            Relevant timespan: <input type="date" name="datefrom" value="{{datefrom}}" placeholder="yyyy-mm-dd"> - <input type="date" name="dateto" value="{{dateto}}" placeholder="yyyy-mm-dd">
         </div>
     </form>
     
