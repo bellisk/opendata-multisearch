@@ -3,8 +3,16 @@ body {
     margin-right: 2em;
 }
 
-.search input {
+h1 a {
+    text-decoration: none;
+}
+
+.query, .submit {
     font-size: 150%;
+}
+
+.daterange {
+    margin-top: 1em;
 }
 
 .portals {
@@ -24,7 +32,7 @@ body {
 }
 
 .portals li:last-child:after {
-    content: "";
+    content: ".";
 }
 
 .results {
@@ -36,4 +44,23 @@ body {
     padding-bottom: 0.5em;
     border-bottom: 1px solid #aaaaaa;
     margin-bottom: 1em;
+}
+
+.narrowing {
+    padding: 0;
+    list-style: none;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #aaaaaa;
+    margin-bottom: 1em;
+}
+
+.narrowing li {
+    display: inline;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.more {
+    cursor: pointer;
+    text-decoration: underline;
 }
