@@ -13,6 +13,17 @@
             document.getElementById(term_id).style.display = 'none';
             document.getElementById('search_form').submit();
         }
+        function truncate_notes(result_id, use_text) {
+            var notes = document.getElementById(result_id);
+            var text = use_text || notes.innerHTML;
+            if (text.length > 120) {
+                notes.innerHTML = text.substr(0, 120) + " <span class='more' id='more_" + result_id + "'>...</span>";
+            }
+            document.getElementById('more_' + result_id).onclick = function() {
+                notes.innerHTML = text + " <span class='more' id='less_" + result_id + "'>&lt;&lt;&lt;</span>";
+                document.getElementById('less_' + result_id).onclick = function() { truncate_notes(result_id, text); };
+            };
+        }
     </script>
 </head>
 <body>
@@ -45,8 +56,9 @@
     {% for r  in results %}
         <li class="result">
             <a href="{{r.result_url}}" class="link">{{r.title}}</a>
-            <div class="notes">{{r.notes}}</div>
+            <div class="notes" id="notes{{forloop.counter}}">{{r.notes}}</div>
         </li>
+        <script>truncate_notes('notes{{forloop.counter}}')</script>
     {% endfor %}
     </ul>
     
