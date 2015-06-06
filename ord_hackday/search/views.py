@@ -15,18 +15,20 @@ def search(request):
 
     # Construct query
     if 'query' in request.GET:
-        c['query'] = query_string
         query_string = request.GET['query']
+        c['query'] = query_string
 
-    pubfrom = request.GET['pubfrom'] + 'T00:00:00Z' if 'pubfrom' in request.GET else ''
-    pubto = request.GET['pubto'] + 'T23:59:59Z' if 'pubto' in request.GET else ''
-    pub_range = ('metadata_created:[%s TO %s]' % (pubfrom, pubto))
+    pubfrom = request.GET['pubfrom'] + 'T00:00:00Z' if request.GET['pubfrom'] else ''
+    pubto = request.GET['pubto'] + 'T23:59:59Z' if request.GET['pubto'] else ''
+    pub_range = (' metadata_created:[%s TO %s]' % (pubfrom, pubto))
 
     if pubfrom or pubto:
         query_string = query_string + pub_range
 
+
     # Search with query
     if len(query_string) > 0:
+        print(query_string)
         c['results'] = []
         all_results = []
 
