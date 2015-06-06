@@ -6,12 +6,20 @@
     <meta charset="UTF-8">
     <title>Open Data Multisearch</title>
     <link href="{% static "search/style.css" %}" rel="stylesheet" type="text/css" media="screen">
+    <script>
+        function narrow(term, term_id) {
+            var query_field = document.getElementById('query');
+            query_field.value = query_field.value + " " + term;
+            document.getElementById(term_id).style.display = 'none';
+            document.getElementById('search_form').submit();
+        }
+    </script>
 </head>
 <body>
     <h1>ORD Hackday 2015 - Open Data Multisearch</h1>
     
-    <form action="/" method="get" class="search">
-        <input type="text" name="query" value="{{query}}" class="query"> <input type="submit" value="Search" class="submit">
+    <form action="/" method="get" class="search" id="search_form">
+        <input type="text" name="query" value="{{query}}" class="query" id="query"> <input type="submit" value="Search" class="submit">
         <div class="daterange">
             Published: <input type="date" name="pubfrom" value="{{pubfrom}}"> - <input type="date" name="pubto" value="{{pubto}}">
         </div>
@@ -19,6 +27,15 @@
             Relevant timespan: <input type="date" name="datefrom" value="{{datefrom}}"> - <input type="date" name="dateto" value="{{dateto}}">
         </div>
     </form>
+    
+    {% if narrowing_terms %}
+        <ul class="narrowing">
+            Narrow search: 
+            {% for n in narrowing_terms %}
+                <li id="n{{forloop.counter}}" onclick="narrow('{{n}}', 'n{{forloop.counter}}')">{{n}}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     
     <ul class="portals">
         Searching {% for p in portals %}<li><a href="{{p.url}}">{{p.name}}</a></li>{% endfor %}
