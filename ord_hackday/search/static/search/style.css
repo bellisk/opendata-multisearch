@@ -3,8 +3,12 @@ body {
     margin-right: 2em;
 }
 
-.search input {
+.query, .submit {
     font-size: 150%;
+}
+
+.daterange {
+    margin-top: 1em;
 }
 
 .portals {

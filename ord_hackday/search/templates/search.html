@@ -12,6 +12,12 @@
     
     <form action="/" method="get" class="search">
         <input type="text" name="query" value="{{query}}" class="query"> <input type="submit" value="Search" class="submit">
+        <div class="daterange">
+            Published: <input type="date" name="pubfrom" value="{{pubfrom}}"> - <input type="date" name="pubto" value="{{pubto}}">
+        </div>
+        <div class="daterange">
+            Relevant timespan: <input type="date" name="datefrom" value="{{datefrom}}"> - <input type="date" name="dateto" value="{{dateto}}">
+        </div>
     </form>
     
     <ul class="portals">
