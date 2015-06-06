@@ -33,7 +33,6 @@ def search(request):
 
     # Search with query
     if len(query_string) > 0:
-        print(query_string)
         c['results'] = []
         all_results = []
 
