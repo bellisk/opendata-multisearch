@@ -37,7 +37,7 @@ def search(request):
         all_results = []
 
         for portal in portals:
-            url = portal.url + '/api/3/action/package_search?q=' + query_string
+            url = portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=1000'
             r = requests.get(url)
             json_result = json.loads(r.text)
 
