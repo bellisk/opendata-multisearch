@@ -12,21 +12,21 @@
     <script src="{% static "search/js/jquery-ui-1.11.4.custom/jquery-ui.min.js" %}"></script>
     <script>
         function narrow(term, term_id) {
-            var query_field = document.getElementById('query');
-            query_field.value = query_field.value + " " + term;
-            document.getElementById(term_id).style.display = 'none';
-            document.getElementById('search_form').submit();
+            var query_field = jQuery("#query");
+            query_field.val(query_field.val() + " " + term);
+            jQuery("#" + term_id).hide();
+            jQuery("#search_form").submit();
         }
         function truncate_notes(result_id, use_text) {
-            var notes = document.getElementById(result_id);
-            var text = use_text || notes.innerHTML;
+            var notes = jQuery("#" + result_id);
+            var text = use_text || notes.html();
             if (text.length > 120) {
-                notes.innerHTML = text.substr(0, 120) + " <span class='more' id='more_" + result_id + "'>...</span>";
+                notes.html(text.substr(0, 120) + " <span class='more' id='more_" + result_id + "'>...</span>");
             }
-            document.getElementById('more_' + result_id).onclick = function() {
-                notes.innerHTML = text + " <span class='more' id='less_" + result_id + "'>&lt;&lt;&lt;</span>";
-                document.getElementById('less_' + result_id).onclick = function() { truncate_notes(result_id, text); };
-            };
+            jQuery("#more_" + result_id).click(function() {
+                notes.html(text + " <span class='more' id='less_" + result_id + "'>&lt;&lt;&lt;</span>");
+                jQuery("#less_" + result_id).click(function() { truncate_notes(result_id, text); });
+            });
         }
         $(function() {
             if (!Modernizr.inputtypes.date) {
