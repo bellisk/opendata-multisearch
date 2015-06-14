@@ -54,7 +54,7 @@ def search(request):
 
 
 def extract_narrowing_terms(results):
-    titles = [re.sub(r'[«»!?,.()\[\]]', ' ', r['title'].lower()) for r in results]
+    titles = [re.sub(r'[«»!?,.:;|@#&=+0()\[\]{}<>*+]', ' ', r['title'].lower()) for r in results]
     wordcounts = {}
 
     for t in titles:
