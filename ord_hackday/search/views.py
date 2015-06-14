@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
+from django.conf import settings
 from ord_hackday.search.models import Portal
 import requests
 import json
@@ -38,7 +39,7 @@ def search(request):
 
         for portal in portals:
             try:
-                url = portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=1000'
+                url = portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=' + str(settings.MAX_PORTAL_RESULTS)
                 r = requests.get(url)
                 json_result = json.loads(r.text)
 
