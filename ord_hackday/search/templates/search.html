@@ -46,6 +46,12 @@
         <div class="daterange">
             Relevant timespan: <input type="date" name="datefrom" value="{{datefrom}}" id="datefrom" placeholder="yyyy-mm-dd"> - <input type="date" name="dateto" value="{{dateto}}" id="dateto" placeholder="yyyy-mm-dd">
         </div>
+        <div class="portal_choice">
+            Portals to search:
+            <ul>
+                {% for p in portals %}<li><input type="checkbox" name="{{p.portal.id}}" id="portal_{{p.portal.id}}" {% if p.active %}checked="true"{% endif %}><label for="portal_{{p.portal.id}}">{{p.portal.name}}</label></li>{% endfor %}
+            </ul>
+        </div>
     </form>
     
     {% if narrowing_terms %}
@@ -56,10 +62,6 @@
             {% endfor %}
         </ul>
     {% endif %}
-    
-    <ul class="portals">
-        Searching {% for p in portals %}<li><a href="{{p.url}}">{{p.name}}</a></li>{% endfor %}
-    </ul>
 
     {% if portal_errors %}
         <ul class="portal_errors">
@@ -68,14 +70,16 @@
     {% endif %}
     
     <ul class="results">
-    {% for r  in results %}
+    {% for r in results %}
         <li class="result">
             <a href="{{r.result_url}}" class="result_link">{{r.title}}</a> <span class="portal_link">(<a href="{{r.portal.url}}">{{r.portal}}</a>)</span>
             <div class="notes" id="notes{{forloop.counter}}">{{r.notes}}</div>
         </li>
         <script>truncate_notes('notes{{forloop.counter}}')</script>
     {% empty %}
-        <div class="noresults">No results found.</div>
+        {% if has_query %}
+            <div class="noresults">No results found.</div>
+        {% endif %}
     {% endfor %}
     </ul>
     

@@ -13,7 +13,7 @@ def search(request):
     keyword_query = ''
     query_string = ''
     portals = Portal.objects.all()
-    c['portals'] = portals
+    c['portals'] = [{'portal': p, 'active': True} for p in portals]
 
     # Construct query
     if 'query' in request.GET:
@@ -31,13 +31,17 @@ def search(request):
         c['pubto'] = request.GET['pubto']
 
     if pubfrom or pubto:
-        query_string = query_string + pub_range
+        query_string += pub_range
 
     # Search with query
     if len(query_string) > 0:
+        c['has_query'] = True
         c['results'] = []
         c['portal_errors'] = []
         top_results = []
+
+        portals = [p for p in portals if str(p.id) in request.GET]
+        c['portals'] = [{'portal': p, 'active': p in portals} for p in Portal.objects.all()]
 
         for portal in portals:
             try:
