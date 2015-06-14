@@ -51,6 +51,12 @@
     <ul class="portals">
         Searching {% for p in portals %}<li><a href="{{p.url}}">{{p.name}}</a></li>{% endfor %}
     </ul>
+
+    {% if portal_errors %}
+        <ul class="portal_errors">
+            Received errors from {% for p in portal_errors %}<li><a href="{{p.url}}">{{p.name}}</a></li>{% endfor %}
+        </ul>
+    {% endif %}
     
     <ul class="results">
     {% for r  in results %}
