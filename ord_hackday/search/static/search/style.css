@@ -23,7 +23,6 @@ h1 a {
     list-style: none;
 }
 
-.portals,
 .portal_errors {
     padding: 0;
     list-style: none;
@@ -32,17 +31,14 @@ h1 a {
     margin-bottom: 1em;
 }
 
-.portals li,
 .portal_errors li {
     display: inline;
 }
 
-.portals li:after,
 .portal_errors li:after {
     content: ", ";
 }
 
-.portals li:last-child:after,
 .portal_errors li:last-child:after {
     content: ".";
 }
