@@ -36,23 +36,27 @@
     </script>
 </head>
 <body>
-    <h1><a href="/">ORD Hackday 2015 - Open Data Multisearch</a></h1>
-    
-    <form action="/" method="get" class="search" id="search_form">
-        <input type="text" name="query" value="{{query}}" class="query" id="query"> <input type="submit" value="Search" class="submit">
-        <div class="daterange">
-            Published: <input type="date" name="pubfrom" value="{{pubfrom}}" id="pubfrom" placeholder="yyyy-mm-dd"> - <input type="date" name="pubto" value="{{pubto}}" id="pubto" placeholder="yyyy-mm-dd">
-        </div>
-        <div class="daterange">
-            Relevant timespan: <input type="date" name="datefrom" value="{{datefrom}}" id="datefrom" placeholder="yyyy-mm-dd"> - <input type="date" name="dateto" value="{{dateto}}" id="dateto" placeholder="yyyy-mm-dd">
-        </div>
-        <div class="portal_choice">
-            Portals to search:
-            <ul>
-                {% for p in portals %}<li><input type="checkbox" name="{{p.portal.id}}" id="portal_{{p.portal.id}}" {% if p.active %}checked="true"{% endif %}><label for="portal_{{p.portal.id}}">{{p.portal.name}}</label></li>{% endfor %}
-            </ul>
-        </div>
-    </form>
+    <div class="searchbox_outer"><div class="searchbox">
+        <h1><a href="/"><img src="{% static "search/images/logo.png"%}" class="logo"></a>Open Data Multisearch</h1>
+        
+        <form action="/" method="get" class="search" id="search_form">
+            <input type="text" name="query" value="{{query}}" class="query" id="query"> <input type="submit" value="Search" class="submit">
+            <div class="daterange">
+                Published: <input type="date" name="pubfrom" value="{{pubfrom}}" id="pubfrom" placeholder="yyyy-mm-dd"> - <input type="date" name="pubto" value="{{pubto}}" id="pubto" placeholder="yyyy-mm-dd">
+            </div>
+            <!-- TODO
+            <div class="daterange">
+                Relevant timespan: <input type="date" name="datefrom" value="{{datefrom}}" id="datefrom" placeholder="yyyy-mm-dd"> - <input type="date" name="dateto" value="{{dateto}}" id="dateto" placeholder="yyyy-mm-dd">
+            </div>
+            -->
+            <div class="portal_choice">
+                Portals to search:
+                <ul>
+                    {% for p in portals %}<li><input type="checkbox" name="{{p.portal.id}}" id="portal_{{p.portal.id}}" {% if p.active %}checked="true"{% endif %}><label for="portal_{{p.portal.id}}">{{p.portal.name}}</label> <span class="portal_link"><a href="{{p.portal.url}}">link</a></span></li>{% endfor %}
+                </ul>
+            </div>
+        </form>
+    </div></div>
     
     {% if narrowing_terms %}
         <ul class="narrowing">
@@ -72,7 +76,7 @@
     <ul class="results">
     {% for r in results %}
         <li class="result">
-            <a href="{{r.result_url}}" class="result_link">{{r.title}}</a> <span class="portal_link">(<a href="{{r.portal.url}}">{{r.portal}}</a>)</span>
+            <a href="{{r.result_url}}" class="result_link">{{r.title}}</a> <span class="portal_link"><a href="{{r.portal.url}}">{{r.portal}}</a></span>
             <div class="notes" id="notes{{forloop.counter}}">{{r.notes}}</div>
         </li>
         <script>truncate_notes('notes{{forloop.counter}}')</script>
