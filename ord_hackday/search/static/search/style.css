@@ -3,8 +3,28 @@ body {
     margin-right: 2em;
 }
 
-h1 a {
-    text-decoration: none;
+h1 {
+    text-align: center;
+}
+
+.logo {
+    margin: auto;
+    margin-bottom: 0.5em;
+    display: block;
+}
+
+.searchbox_outer {
+    text-align: center;
+}
+
+.searchbox {
+    margin: auto;
+    display: inline-block;
+    text-align: left;
+}
+
+.query {
+    width: 15em;
 }
 
 .query, .submit {
@@ -15,7 +35,15 @@ h1 a {
     margin-top: 1em;
 }
 
-.portals {
+.portal_choice {
+    margin-top: 1em;
+}
+
+.portal_choice li {
+    list-style: none;
+}
+
+.portal_errors {
     padding: 0;
     list-style: none;
     padding-bottom: 0.5em;
@@ -23,15 +51,15 @@ h1 a {
     margin-bottom: 1em;
 }
 
-.portals li {
+.portal_errors li {
     display: inline;
 }
 
-.portals li:after {
+.portal_errors li:after {
     content: ", ";
 }
 
-.portals li:last-child:after {
+.portal_errors li:last-child:after {
     content: ".";
 }
 
@@ -46,6 +74,11 @@ h1 a {
     margin-bottom: 1em;
 }
 
+.portal_link, .portal_link a {
+    font-size: 80%;
+    color: gray;
+}
+
 .narrowing {
     padding: 0;
     list-style: none;
@@ -58,6 +91,12 @@ h1 a {
     display: inline;
     cursor: pointer;
     text-decoration: underline;
+}
+
+.noresults {
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #aaaaaa;
+    margin-bottom: 1em;
 }
 
 .more {
