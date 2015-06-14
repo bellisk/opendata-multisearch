@@ -40,7 +40,6 @@ def search(request):
             try:
                 url = portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=1000'
                 r = requests.get(url)
-                print url
                 json_result = json.loads(r.text)
 
                 if json_result['success']:
