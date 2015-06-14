@@ -5,7 +5,11 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Open Data Multisearch</title>
+    <link href="{% static "search/js/jquery-ui-1.11.4.custom/jquery-ui.min.css" %}" rel="stylesheet" type="text/css" media="screen">
     <link href="{% static "search/style.css" %}" rel="stylesheet" type="text/css" media="screen">
+    <script src="{% static "search/js/modernizr.js" %}"></script>
+    <script src="{% static "search/js/jquery-1.11.3.min.js" %}"></script>
+    <script src="{% static "search/js/jquery-ui-1.11.4.custom/jquery-ui.min.js" %}"></script>
     <script>
         function narrow(term, term_id) {
             var query_field = document.getElementById('query');
@@ -24,6 +28,11 @@
                 document.getElementById('less_' + result_id).onclick = function() { truncate_notes(result_id, text); };
             };
         }
+        $(function() {
+            if (!Modernizr.inputtypes.date) {
+                $("input[type='date']").datepicker({'dateFormat': 'yy-mm-dd'});
+            }
+        });
     </script>
 </head>
 <body>
@@ -32,10 +41,10 @@
     <form action="/" method="get" class="search" id="search_form">
         <input type="text" name="query" value="{{query}}" class="query" id="query"> <input type="submit" value="Search" class="submit">
         <div class="daterange">
-            Published: <input type="date" name="pubfrom" value="{{pubfrom}}" placeholder="yyyy-mm-dd"> - <input type="date" name="pubto" value="{{pubto}}" placeholder="yyyy-mm-dd">
+            Published: <input type="date" name="pubfrom" value="{{pubfrom}}" id="pubfrom" placeholder="yyyy-mm-dd"> - <input type="date" name="pubto" value="{{pubto}}" id="pubto" placeholder="yyyy-mm-dd">
         </div>
         <div class="daterange">
-            Relevant timespan: <input type="date" name="datefrom" value="{{datefrom}}" placeholder="yyyy-mm-dd"> - <input type="date" name="dateto" value="{{dateto}}" placeholder="yyyy-mm-dd">
+            Relevant timespan: <input type="date" name="datefrom" value="{{datefrom}}" id="datefrom" placeholder="yyyy-mm-dd"> - <input type="date" name="dateto" value="{{dateto}}" id="dateto" placeholder="yyyy-mm-dd">
         </div>
     </form>
     
