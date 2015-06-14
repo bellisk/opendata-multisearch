@@ -61,7 +61,7 @@
     <ul class="results">
     {% for r  in results %}
         <li class="result">
-            <a href="{{r.result_url}}" class="link">{{r.title}}</a>
+            <a href="{{r.result_url}}" class="link">{{r.title}}</a> (<a href="{{r.portal.url}}" class="link">{{r.portal}}</a>)
             <div class="notes" id="notes{{forloop.counter}}">{{r.notes}}</div>
         </li>
         <script>truncate_notes('notes{{forloop.counter}}')</script>
