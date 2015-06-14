@@ -46,6 +46,7 @@ def search(request):
                     all_results.extend(json_result['result']['results'])
                     for r in json_result['result']['results']:
                         r['result_url'] = portal.url + '/dataset/' + r['name']
+                        r['portal'] = portal
                         c['results'].append(r)
 
                 narrowing_terms = extract_narrowing_terms(all_results)
