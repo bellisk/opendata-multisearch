@@ -9,13 +9,15 @@ import re
 
 def search(request):
     c = {}
+    keyword_query = ''
     query_string = ''
     portals = Portal.objects.all()
     c['portals'] = portals
 
     # Construct query
     if 'query' in request.GET:
-        query_string = request.GET['query']
+        keyword_query = request.GET['query']
+        query_string = keyword_query
         c['query'] = query_string
 
     pubfrom = request.GET['pubfrom'] + 'T00:00:00Z' if 'pubfrom' in request.GET and request.GET['pubfrom'] else ''
@@ -34,7 +36,7 @@ def search(request):
     if len(query_string) > 0:
         c['results'] = []
         c['portal_errors'] = []
-        all_results = []
+        top_results = []
 
         for portal in portals:
             try:
@@ -43,13 +45,13 @@ def search(request):
                 json_result = json.loads(r.text)
 
                 if json_result['success']:
-                    all_results.extend(json_result['result']['results'])
+                    top_results.extend(json_result['result']['results'][:30])
                     for r in json_result['result']['results']:
                         r['result_url'] = portal.url + '/dataset/' + r['name']
                         r['portal'] = portal
                         c['results'].append(r)
 
-                narrowing_terms = extract_narrowing_terms(all_results)
+                narrowing_terms = extract_narrowing_terms(top_results, keyword_query)
                 c['narrowing_terms'] = narrowing_terms
             except ValueError, e:
                 c['portal_errors'].append(portal)
@@ -57,17 +59,21 @@ def search(request):
 
     return render(request, 'search.html', c)
 
+def letters_only(s):
+    return re.sub(r'[«»!?,.:;|@#&=+0()\[\]{}<>*+]', ' ', s.lower())
 
-def extract_narrowing_terms(results):
-    titles = [re.sub(r'[«»!?,.:;|@#&=+0()\[\]{}<>*+]', ' ', r['title'].lower()) for r in results]
+def extract_narrowing_terms(results, query):
+    titles = [letters_only(r['title']) for r in results]
+    used_keywords = set(re.split(' +', letters_only(query)))
     wordcounts = {}
 
     for t in titles:
         for w in re.split(r' +', t):
-            if not w in wordcounts:
-                wordcounts[w] = 1
-            else:
-                wordcounts[w] += 1
+            if not w in used_keywords:
+                if not w in wordcounts:
+                    wordcounts[w] = 1
+                else:
+                    wordcounts[w] += 1
 
     counttuples = [(k, v) for k, v in wordcounts.iteritems() if len(k) > 4 and v > 1 and v < len(results) * 0.75]
 
