@@ -59,6 +59,8 @@
             <div class="notes" id="notes{{forloop.counter}}">{{r.notes}}</div>
         </li>
         <script>truncate_notes('notes{{forloop.counter}}')</script>
+    {% empty %}
+        <div class="noresults">No results found.</div>
     {% endfor %}
     </ul>
     

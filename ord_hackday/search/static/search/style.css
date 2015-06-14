@@ -60,6 +60,12 @@ h1 a {
     text-decoration: underline;
 }
 
+.noresults {
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #aaaaaa;
+    margin-bottom: 1em;
+}
+
 .more {
     cursor: pointer;
     text-decoration: underline;
