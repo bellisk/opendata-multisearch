@@ -30,25 +30,29 @@ def search(request):
     if pubfrom or pubto:
         query_string = query_string + pub_range
 
-
     # Search with query
     if len(query_string) > 0:
         c['results'] = []
+        c['portal_errors'] = []
         all_results = []
 
         for portal in portals:
-            url = portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=1000'
-            r = requests.get(url)
-            json_result = json.loads(r.text)
+            try:
+                url = portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=1000'
+                r = requests.get(url)
+                json_result = json.loads(r.text)
 
-            if json_result['success']:
-                all_results.extend(json_result['result']['results'])
-                for r in json_result['result']['results']:
-                    r['result_url'] = portal.url + '/dataset/' + r['name']
-                    c['results'].append(r)
+                if json_result['success']:
+                    all_results.extend(json_result['result']['results'])
+                    for r in json_result['result']['results']:
+                        r['result_url'] = portal.url + '/dataset/' + r['name']
+                        c['results'].append(r)
 
-            narrowing_terms = extract_narrowing_terms(all_results)
-            c['narrowing_terms'] = narrowing_terms
+                narrowing_terms = extract_narrowing_terms(all_results)
+                c['narrowing_terms'] = narrowing_terms
+            except ValueError, e:
+                c['portal_errors'].append(portal)
+                continue
 
     return render(request, 'search.html', c)
 
