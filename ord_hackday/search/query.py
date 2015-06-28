@@ -1,34 +1,43 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
-import requests, json
-from requests_futures.sessions import FuturesSession
+import requests, json, time
 
 
-mock = True
-session = FuturesSession()
+session = None
 
+if settings.SIMULTANEOUS_QUERY_THREADS > 1:
+    try:
+        from requests_futures.sessions import FuturesSession
+        from concurrent.futures import ThreadPoolExecutor
+        session = FuturesSession(executor=ThreadPoolExecutor(max_workers=settings.SIMULTANEOUS_QUERY_THREADS))
+    except:
+        print("Unable to create thread pool for requests_futures. Falling back to synchronous querying.")
+
+
+## Used for single-threaded querying.
 class MockFuture:
     def __init__(self, query_string, portal):
-        print(portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=' + str(settings.MAX_PORTAL_RESULTS))
         self._result = requests.get(portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=' + str(settings.MAX_PORTAL_RESULTS))
     
     def result(self):
         return self._result
 
 def start_query(session, query_string, portal):
-    if mock:
-        return (
-            MockFuture(query_string, portal),
-            portal
-        )
-    else:
+    if session:
         return (
             session.get(portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=' + str(settings.MAX_PORTAL_RESULTS)),
             portal
         )
+    else:
+        return (
+            MockFuture(query_string, portal),
+            portal
+        )
+        
 
 def query_portals(query_string, portals):
+    start = time.time()
     futures = [start_query(session, query_string, portal) for portal in portals]
     results = []
     top_results = []
@@ -47,4 +56,5 @@ def query_portals(query_string, portals):
         except ValueError as e:
             errors.append(portal)
             continue
+    print("Time taken: " + str(time.time() - start))
     return (results, top_results, errors)
