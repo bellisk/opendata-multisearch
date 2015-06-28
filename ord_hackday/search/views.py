@@ -6,12 +6,19 @@ from .models import Portal
 from .query import query_portals
 import json, re
 
+
 def search(request):
+    portals = Portal.objects.all()
+    search_params = (
+        ('query',),
+        ('pubfrom',),
+        ('pubto',),
+        ('page_number', '0'),
+    ) + tuple([(p.id, 'on') for p in portals])
+
     c = {}
     keyword_query = ''
     query_string = ''
-    portals = Portal.objects.all()
-    c['portals'] = [{'portal': p, 'active': True} for p in portals]
 
     # Construct query
     if 'query' in request.GET:
@@ -22,11 +29,12 @@ def search(request):
     pubfrom = request.GET['pubfrom'] + 'T00:00:00Z' if 'pubfrom' in request.GET and request.GET['pubfrom'] else ''
     pubto = request.GET['pubto'] + 'T23:59:59Z' if 'pubto' in request.GET and request.GET['pubto'] else ''
     pub_range = (' metadata_created:[%s TO %s]' % (pubfrom, pubto))
-    
-    if 'pubfrom' in request.GET:
-        c['pubfrom'] = request.GET['pubfrom']
-    if 'pubto' in request.GET:
-        c['pubto'] = request.GET['pubto']
+
+    for param in search_params:
+        if param[0] in request.GET:
+            c[param[0]] = request.GET[param[0]]
+        elif len(param) == 2:
+            c[param[0]] = param[1]
 
     if pubfrom or pubto:
         query_string += pub_range
@@ -36,7 +44,7 @@ def search(request):
         c['has_query'] = True
         portals = [p for p in portals if str(p.id) in request.GET]
         c['portals'] = [{'portal': p, 'active': p in portals} for p in Portal.objects.all()]
-        c['results'], top_results, c['portal_errors'] = query_portals(query_string, portals)
+        c['results'], top_results, c['portal_errors'], more = query_portals(query_string, portals, int(c['page_number']))
         c['narrowing_terms'] = extract_narrowing_terms(top_results, keyword_query)
 
     return render(request, 'search.html', c)
