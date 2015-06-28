@@ -58,7 +58,7 @@ def search(request):
 
                 narrowing_terms = extract_narrowing_terms(top_results, keyword_query)
                 c['narrowing_terms'] = narrowing_terms
-            except ValueError, e:
+            except ValueError as e:
                 c['portal_errors'].append(portal)
                 continue
 
@@ -80,6 +80,6 @@ def extract_narrowing_terms(results, query):
                 else:
                     wordcounts[w] += 1
 
-    counttuples = [(k, v) for k, v in wordcounts.iteritems() if len(k) > 4 and v > 1 and v < len(results) * 0.75]
+    counttuples = [(k, v) for k, v in wordcounts.items() if len(k) > 4 and v > 1 and v < len(results) * 0.75]
 
     return [t[0] for t in sorted(counttuples, key=lambda t: -t[1])][:8]
