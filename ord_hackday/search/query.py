@@ -2,15 +2,40 @@
 
 from django.conf import settings
 import requests, json
+from requests_futures.sessions import FuturesSession
+
+
+mock = True
+session = FuturesSession()
+
+class MockFuture:
+    def __init__(self, query_string, portal):
+        print(portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=' + str(settings.MAX_PORTAL_RESULTS))
+        self._result = requests.get(portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=' + str(settings.MAX_PORTAL_RESULTS))
+    
+    def result(self):
+        return self._result
+
+def start_query(session, query_string, portal):
+    if mock:
+        return (
+            MockFuture(query_string, portal),
+            portal
+        )
+    else:
+        return (
+            session.get(portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=' + str(settings.MAX_PORTAL_RESULTS)),
+            portal
+        )
 
 def query_portals(query_string, portals):
+    futures = [start_query(session, query_string, portal) for portal in portals]
     results = []
     top_results = []
     errors = []
-    for portal in portals:
+    for future, portal in futures:
         try:
-            url = portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=' + str(settings.MAX_PORTAL_RESULTS)
-            r = requests.get(url)
+            r = future.result()
             json_result = json.loads(r.text)
 
             if json_result['success']:
