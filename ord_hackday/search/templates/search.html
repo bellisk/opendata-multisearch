@@ -72,6 +72,18 @@
             Received errors from {% for p in portal_errors %}<li><a href="{{p.url}}">{{p.name}}</a></li>{% endfor %}
         </ul>
     {% endif %}
+
+    <div class="pagination">
+        {% if prev_get_params %}
+            <a href="/?{{prev_get_params|safe}}">&lt;&lt;</a>
+        {% endif %}
+
+        {% if next_get_params %}
+            <a href="/?{{next_get_params|safe}}">&gt;&gt;</a>
+        {% endif %}
+
+        Page {{page_number_plus_one}}
+    </div>
     
     <ul class="results">
     {% for r in results %}
@@ -86,6 +98,18 @@
         {% endif %}
     {% endfor %}
     </ul>
+
+    <div class="pagination">
+        {% if prev_get_params %}
+            <a href="/?{{prev_get_params|safe}}">&lt;&lt;</a>
+        {% endif %}
+
+        {% if next_get_params %}
+            <a href="/?{{next_get_params|safe}}">&gt;&gt;</a>
+        {% endif %}
+
+        Page {{page_number_plus_one}}
+    </div>
     
     <div class="footer">
         <a href="http://make.opendata.ch/wiki/project:discoverabilitythroughstructure">Project Page</a>

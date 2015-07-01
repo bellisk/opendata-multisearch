@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from django.conf import settings
+from django.utils.http import urlencode
 from .models import Portal
 from .query import query_portals
-import json, re
+import re
+
 
 def search(request):
+    portals = Portal.objects.all()
+    search_params = (
+        ('query',),
+        ('pubfrom',),
+        ('pubto',),
+        ('page_number', '0'),
+    ) + tuple([(p.id, 'on') for p in portals])
+
     c = {}
     keyword_query = ''
     query_string = ''
-    portals = Portal.objects.all()
-    c['portals'] = [{'portal': p, 'active': True} for p in portals]
 
     # Construct query
     if 'query' in request.GET:
@@ -22,11 +29,14 @@ def search(request):
     pubfrom = request.GET['pubfrom'] + 'T00:00:00Z' if 'pubfrom' in request.GET and request.GET['pubfrom'] else ''
     pubto = request.GET['pubto'] + 'T23:59:59Z' if 'pubto' in request.GET and request.GET['pubto'] else ''
     pub_range = (' metadata_created:[%s TO %s]' % (pubfrom, pubto))
-    
-    if 'pubfrom' in request.GET:
-        c['pubfrom'] = request.GET['pubfrom']
-    if 'pubto' in request.GET:
-        c['pubto'] = request.GET['pubto']
+
+    for param in search_params:
+        if param[0] in request.GET:
+            c[param[0]] = request.GET[param[0]]
+        elif len(param) == 2:
+            c[param[0]] = param[1]
+
+    c['portals'] = [{'portal': p, 'active': c[p.id] == "on"} for p in portals]
 
     if pubfrom or pubto:
         query_string += pub_range
@@ -36,10 +46,20 @@ def search(request):
         c['has_query'] = True
         portals = [p for p in portals if str(p.id) in request.GET]
         c['portals'] = [{'portal': p, 'active': p in portals} for p in Portal.objects.all()]
-        c['results'], top_results, c['portal_errors'] = query_portals(query_string, portals)
+        c['results'], top_results, c['portal_errors'], more = query_portals(query_string, portals, int(c['page_number']))
         c['narrowing_terms'] = extract_narrowing_terms(top_results, keyword_query)
+        if int(c['page_number']) > 0:
+            c['prev_get_params'] = get_params(c, search_params, page_number=str(int(c['page_number']) - 1))
+        if more:
+            c['next_get_params'] = get_params(c, search_params, page_number=str(int(c['page_number']) + 1))
+        c['page_number_plus_one'] = str(int(c['page_number']) + 1)
 
     return render(request, 'search.html', c)
+
+def get_params(c, search_params, **kwargs):
+    c = dict(c)
+    c.update(kwargs)
+    return urlencode({p[0]: c[p[0]] for p in search_params})
 
 def letters_only(s):
     return re.sub(r'[«»!?,.:;|@#&=+0()\[\]{}<>*+]', ' ', s.lower())
