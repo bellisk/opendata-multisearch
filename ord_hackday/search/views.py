@@ -2,11 +2,9 @@
 
 from django.shortcuts import render
 from django.conf import settings
-from ord_hackday.search.models import Portal
-import requests
-import json
-import re
-
+from .models import Portal
+from .query import query_portals
+import json, re
 
 def search(request):
     c = {}
@@ -36,31 +34,10 @@ def search(request):
     # Search with query
     if len(query_string) > 0:
         c['has_query'] = True
-        c['results'] = []
-        c['portal_errors'] = []
-        top_results = []
-
         portals = [p for p in portals if str(p.id) in request.GET]
         c['portals'] = [{'portal': p, 'active': p in portals} for p in Portal.objects.all()]
-
-        for portal in portals:
-            try:
-                url = portal.url + '/api/3/action/package_search?q=' + query_string + '&rows=' + str(settings.MAX_PORTAL_RESULTS)
-                r = requests.get(url)
-                json_result = json.loads(r.text)
-
-                if json_result['success']:
-                    top_results.extend(json_result['result']['results'][:30])
-                    for r in json_result['result']['results']:
-                        r['result_url'] = portal.url + '/dataset/' + r['name']
-                        r['portal'] = portal
-                        c['results'].append(r)
-
-                narrowing_terms = extract_narrowing_terms(top_results, keyword_query)
-                c['narrowing_terms'] = narrowing_terms
-            except ValueError, e:
-                c['portal_errors'].append(portal)
-                continue
+        c['results'], top_results, c['portal_errors'] = query_portals(query_string, portals)
+        c['narrowing_terms'] = extract_narrowing_terms(top_results, keyword_query)
 
     return render(request, 'search.html', c)
 
@@ -80,6 +57,6 @@ def extract_narrowing_terms(results, query):
                 else:
                     wordcounts[w] += 1
 
-    counttuples = [(k, v) for k, v in wordcounts.iteritems() if len(k) > 4 and v > 1 and v < len(results) * 0.75]
+    counttuples = [(k, v) for k, v in wordcounts.items() if len(k) > 4 and v > 1 and v < len(results) * 0.75]
 
     return [t[0] for t in sorted(counttuples, key=lambda t: -t[1])][:8]
