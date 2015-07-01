@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from django.conf import settings
+from django.utils.http import urlencode
 from .models import Portal
 from .query import query_portals
-import json, re
+import re
 
 
 def search(request):
@@ -48,8 +48,18 @@ def search(request):
         c['portals'] = [{'portal': p, 'active': p in portals} for p in Portal.objects.all()]
         c['results'], top_results, c['portal_errors'], more = query_portals(query_string, portals, int(c['page_number']))
         c['narrowing_terms'] = extract_narrowing_terms(top_results, keyword_query)
+        if int(c['page_number']) > 0:
+            c['prev_get_params'] = get_params(c, search_params, page_number=str(int(c['page_number']) - 1))
+        if more:
+            c['next_get_params'] = get_params(c, search_params, page_number=str(int(c['page_number']) + 1))
+        c['page_number_plus_one'] = str(int(c['page_number']) + 1)
 
     return render(request, 'search.html', c)
+
+def get_params(c, search_params, **kwargs):
+    c = dict(c)
+    c.update(kwargs)
+    return urlencode({p[0]: c[p[0]] for p in search_params})
 
 def letters_only(s):
     return re.sub(r'[«»!?,.:;|@#&=+0()\[\]{}<>*+]', ' ', s.lower())

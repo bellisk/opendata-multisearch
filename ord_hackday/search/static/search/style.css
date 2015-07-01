@@ -63,6 +63,12 @@ h1 {
     content: ".";
 }
 
+.pagination {
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #aaaaaa;
+    margin-bottom: 1em;
+}
+
 .results {
     padding: 0;
     list-style: none;
