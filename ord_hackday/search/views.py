@@ -36,6 +36,8 @@ def search(request):
         elif len(param) == 2:
             c[param[0]] = param[1]
 
+    c['portals'] = [{'portal': p, 'active': c[p.id] == "on"} for p in portals]
+
     if pubfrom or pubto:
         query_string += pub_range
 
